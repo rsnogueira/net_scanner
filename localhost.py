@@ -42,7 +42,7 @@ class Localhost(object):
                     if linha[linha.find(":") + 2:-1] != '':
                         host['netmask'] = linha[linha.find(":") + 2:-1]
 
-                    host.update(self.get_network(host['ip_addr'],host['netmask']))
+                    host.update(self.get_network(host['ip_addr'], host['netmask']))
                     self.interfaces.append(host.copy())
         except:
             pass
@@ -54,11 +54,11 @@ class Localhost(object):
         ip_mask = ip + "/" + netmask
         try:
             net = ipaddress.IPv4Network(ipaddress.IPv4Interface(ip_mask).network)
-            network['network'] = str(net.network_address)
+            network['network'] = net.network_address
             network['cider'] = net.prefixlen
-            network['broadcast'] = str(net.broadcast_address)
-            network['hosts'] = str(net.num_addresses)
-        except Exception as e:
+            network['broadcast'] = net.broadcast_address
+            network['hosts'] = net.num_addresses
+        except:
             pass
 
         return network
@@ -67,21 +67,22 @@ class Localhost(object):
         display = f"Hostname: {self.hostname}          OS: {self.system}\n"
         show_int = ""
         for i in range(len(self.interfaces)):
-            show_int = show_int + f"{30 * '**'}\n"
-            show_int = show_int + f"Interface[{i}]   >>>        IP: {self.interfaces[i]['ip_addr']}/{self.interfaces[i]['netmask']}\n"
-            show_int = show_int + f"               >>>   Network: {self.interfaces[i]['network']}/{self.interfaces[i]['cider']}\n"
-            show_int = show_int + f"               >>> Broadcast: {self.interfaces[i]['broadcast']}\n"
-            show_int = show_int + f"               >>>     Hosts: {self.interfaces[i]['hosts']}\n"
-        show_int = show_int + f"{30 * '**'}\n"
+            show_int += (f"{20 * '***'}\n"
+                        f"Interface[{i}]   \n"
+                        f">>>>        IP: {self.interfaces[i]['ip_addr']}/{self.interfaces[i]['netmask']}\n"
+                        f">>>>   Network: {self.interfaces[i]['network']}/{self.interfaces[i]['cider']}\n"
+                        f">>>> Broadcast: {self.interfaces[i]['broadcast']}\n"
+                        f">>>>     Hosts: {self.interfaces[i]['hosts']}\n")
+        show_int += f"{30 * '**'}\n"
 
         display = display + show_int
 
-        return (display)
+        return display
 
 
-# if __name__ == '__main__':
-host = Localhost()
-print(host)
+if __name__ == '__main__':
+    host = Localhost()
+    print(host)
 # print(host.get_system())
 # print(host.get_hostname())
 # print(host.get_interfaces())
