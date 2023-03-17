@@ -2,6 +2,7 @@ import os
 import socket
 import threading
 import ipaddress
+from host import Host
 
 
 class Discovery(object):
@@ -14,13 +15,15 @@ class Discovery(object):
 
     @staticmethod
     def check_active_ping(ip_addr, active_hosts, lock):
-        host = {}
+        ports = []
         result = os.popen("ping {0} -n 1".format(ip_addr)).read()
 
         if "TTL" in result:
             with lock:
-                host['ip_addr'] = str(ip_addr)
-                active_hosts.append(host)
+                # ports = Host.port_scan(ip_addr)
+                # active_hosts.append(Host(str(ip_addr),ports))
+                active_hosts.append(str(ip_addr))
+
 
     def network_scan(self, my_ip, network):
         threads = []
@@ -35,34 +38,30 @@ class Discovery(object):
             threads.append(t)
 
             cont += 1
-            if cont > 3:
-                break
+            if cont > 10:
+                 break
         for thread in threads:
             thread.join()
 
-    def port_scan(self, target):
-        host_ativo = {}
-        services = {}
-        lsf_services = []
-        for port in range(1, 1025):
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            result = s.connect((target, port))
-            if result == 0:
-                services['port'] = str(port)
-                services['status'] = 'OPEN'
-                lsf_services.append(services)
-        s.close()
+    @staticmethod
+    def port_scan(target):
+        services = []
+        port = 4444
+        # for port in range(1, 25):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        result = s.connect((target, port))
+        if result == 0:
+            services.append(port)
+        # s.close()
 
-        # for i in range(len(self.active_hosts)):
-        #     host_ativo = self.active_hosts[i]
-        #     if host_ativo['ip_addr'] == target:
-        #         host_ativo.
+        return services
 
 
 
 if __name__ == '__main__':
     varredura = Discovery()
-    net = ipaddress.IPv4Network('10.3.18.0/24')
-    # rede = ipaddress.IPv4Network('10.0.0.0/29')
-    varredura.network_scan('10.3.18.4', net)
+    # net = ipaddress.IPv4Network('192.168.0.0/24')
+    rede = ipaddress.IPv4Network('10.0.0.0/29')
+    # varredura.network_scan('192.168.0.106', net)
+    varredura.port_scan('192.168.0.110')
     print(varredura.get_active_hosts())
