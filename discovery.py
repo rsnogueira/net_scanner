@@ -74,16 +74,16 @@ class Discovery(object):
 
 if __name__ == '__main__':
     varredura = Discovery()
-    net = ipaddress.IPv4Network('10.3.18.0/26') # nao apagar
+    net = ipaddress.IPv4Network('192.168.0.96/27') # nao apagar
     # rede = ipaddress.IPv4Network('10.0.0.0/29')
-    varredura.network_scan('10.3.18.143', net) # nao apagar
+    varredura.network_scan('192.168.0.106', net) # nao apagar
     # varredura.port_scan('192.168.0.110')
-    #print(sorted(varredura.get_active_hosts(), key=ipaddress.IPv4Address)) # nao apagar
+    print(sorted(varredura.get_active_hosts(), key=ipaddress.IPv4Address)) # nao apagar
 
-    lista = sorted(varredura.get_active_hosts(), key=ipaddress.IPv4Address)
-
-    for ip in lista:
-        host = Host(ip)
-        host.port_scan()
-        print(f"IP: {ip}\n{host.getOpenedPort()}")
+    # lista = sorted(varredura.get_active_hosts(), key=ipaddress.IPv4Address)
+    #
+    # for ip in lista:
+    #     host = Host(ip)
+    #     host.port_scan()
+    #     print(f"IP: {ip}\n{host.getOpenedPort()}")
 

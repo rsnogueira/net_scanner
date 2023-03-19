@@ -7,7 +7,8 @@ class Localhost(object):
 
     def __init__(self):
         self.system = platform.system()
-        self.hostname = os.popen("hostname").read()
+        self.ip_addr = ""
+        self.hostname = os.popen("hostname").read()[:-1]
         self.interfaces = []
         self.interfaces = self.set_interfaces()
 
@@ -63,6 +64,15 @@ class Localhost(object):
 
         return network
 
+    def get_ip_by_network(self, network):
+
+        for i in range(len(self.interfaces)):
+            if network == f"{self.interfaces[i]['network']}/{self.interfaces[i]['cider']}":
+                self.ip_addr = self.interfaces[i]['ip_addr']
+                break
+
+        return self.ip_addr
+
     def __str__(self):
         display = f"Hostname: {self.hostname}          OS: {self.system}\n"
         show_int = ""
@@ -83,7 +93,7 @@ class Localhost(object):
 if __name__ == '__main__':
     host = Localhost()
     print(host)
-# print(host.get_system())
-# print(host.get_hostname())
-# print(host.get_interfaces())
-# host()
+    # print(host.get_system())
+    # print(host.get_hostname())
+    print(host.get_interfaces())
+    # host()
